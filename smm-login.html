@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — SocialBoost Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07161A;
+    --panel:#0D2229;
+    --panel-2:#123039;
+    --text:#F0F7F6;
+    --muted:#8FAAAE;
+    --purple:#F2B33D;
+    --pink:#2DD4BF;
+    --cyan:#F2B33D;
+    --border:#1D3941;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  h1,h2,h3{font-family:'Outfit',sans-serif;color:var(--text);line-height:1.15;font-weight:700;}
+  .grad-text{
+    background:linear-gradient(90deg, var(--purple), var(--pink));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .mono{font-family:'Roboto Mono',monospace;}
+  a{text-decoration:none;color:inherit;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 rgba(242,179,61,0);}50%{box-shadow:0 0 24px rgba(242,179,61,0.25);}}
+
+  header{
+    background:rgba(7,22,26,0.8);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:18px 0;
+  }
+  header .wrap{display:flex;justify-content:space-between;align-items:center;}
+  .logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.25rem;display:flex;align-items:center;gap:8px;}
+  .logo .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);animation:pulse 2s ease infinite;}
+  nav a{color:var(--muted);margin-left:20px;font-size:0.9rem;font-weight:500;}
+  nav a:hover{color:var(--text);}
+
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:56px 24px;position:relative;overflow:hidden;}
+  main::before{
+    content:"";position:absolute;top:-180px;left:50%;transform:translateX(-50%);
+    width:600px;height:360px;
+    background:radial-gradient(ellipse, rgba(242,179,61,0.15), transparent 70%);
+    pointer-events:none;
+  }
+
+  .auth-card{
+    width:100%;max-width:420px;
+    background:var(--panel);border:1px solid var(--border);border-radius:18px;
+    padding:40px 36px;position:relative;z-index:1;
+    opacity:0;animation:fadeUp 0.6s ease forwards, glow 4s ease-in-out infinite;
+  }
+
+  .auth-head{text-align:center;margin-bottom:28px;}
+  .auth-head .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'Roboto Mono',monospace;font-size:0.72rem;color:var(--cyan);
+    background:rgba(242,179,61,0.1);border:1px solid rgba(242,179,61,0.25);
+    padding:6px 14px;border-radius:30px;margin-bottom:16px;
+  }
+  .auth-head h1{font-size:1.5rem;}
+  .auth-head p{color:var(--muted);font-size:0.9rem;margin-top:8px;}
+
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:0.84rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .field input{
+    width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;
+    font-family:'Plus Jakarta Sans',sans-serif;font-size:0.92rem;background:var(--bg);color:var(--text);
+    transition:border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .field input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(242,179,61,0.15);}
+
+  .row-between{display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;margin-bottom:22px;}
+  .row-between label{display:flex;align-items:center;gap:6px;color:var(--muted);font-weight:400;}
+  .row-between a{color:var(--pink);font-weight:500;}
+  .row-between a:hover{color:var(--purple);}
+
+  .btn{
+    display:inline-block;width:100%;padding:14px;border-radius:10px;font-weight:700;
+    font-size:0.94rem;border:none;cursor:pointer;transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg, var(--purple), var(--pink));color:#07161A;
+    box-shadow:0 10px 26px rgba(242,179,61,0.25);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(242,179,61,0.35);}
+
+  .divider{display:flex;align-items:center;gap:12px;margin:24px 0;color:var(--muted);font-size:0.8rem;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+
+  .switch-line{text-align:center;font-size:0.88rem;color:var(--muted);}
+  .switch-line a{color:var(--pink);font-weight:700;}
+  .switch-line a:hover{color:var(--purple);}
+
+  .field-error{border-color:var(--pink) !important;}
+  .field-error-msg{color:#FF6B6B;font-size:0.78rem;margin-top:-10px;margin-bottom:12px;}
+  .form-message{padding:12px 16px;border-radius:10px;font-size:0.86rem;margin-bottom:18px;background:rgba(45,212,191,0.12);color:var(--pink);border:1px solid rgba(45,212,191,0.3);}
+
+  footer{padding:22px 0;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+  footer a{color:var(--pink);}
+
+  @media(max-width:480px){
+    .auth-card{padding:32px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>SocialBoost <span class="grad-text">Panel</span></div>
+    <nav>
+      <a href="smm-panel-landing.html">Home</a>
+      <a href="smm-signup.html">Sign Up</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="auth-card">
+    <div class="auth-head">
+      <span class="badge">⚡ CLIENT PANEL</span>
+      <h1>Welcome Back</h1>
+      <p>Apne panel me login karein aur orders track karein.</p>
+    </div>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email or Username</label>
+        <input type="text" id="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••">
+      </div>
+
+      <div class="row-between">
+        <label><input type="checkbox"> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <div class="divider">ya</div>
+
+    <p class="switch-line">Account nahi hai? <a href="smm-signup.html">Sign up karein</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    SocialBoost Panel &nbsp;•&nbsp; <a href="mailto:support@socialmediaboost247.in">support@socialmediaboost247.in</a>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var form = document.getElementById('login-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var existingMsg = form.querySelector('.form-message');
+      if (existingMsg) existingMsg.remove();
+
+      var isValid = true, firstInvalid = null;
+      form.querySelectorAll('input[type="text"], input[type="password"]').forEach(function (field) {
+        var errMsg = field.nextElementSibling;
+        if (errMsg && errMsg.classList.contains('field-error-msg')) errMsg.remove();
+        field.classList.remove('field-error');
+
+        if (field.value.trim() === '') {
+          field.classList.add('field-error');
+          var msg = document.createElement('div');
+          msg.className = 'field-error-msg';
+          msg.textContent = 'Ye field zaroori hai';
+          field.insertAdjacentElement('afterend', msg);
+          isValid = false;
+          if (!firstInvalid) firstInvalid = field;
+        }
+      });
+
+      if (!isValid) { firstInvalid.focus(); return; }
+
+      var success = document.createElement('div');
+      success.className = 'form-message';
+      success.textContent = 'Login ho gaya! (Demo — koi backend connected nahi hai)';
+      form.prepend(success);
+    });
+  }
+});
+</script>
+
+</body>
+</html>
